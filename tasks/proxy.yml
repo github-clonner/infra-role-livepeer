@@ -10,4 +10,5 @@
     src: '/etc/nginx/sites-available/livepeer-config.conf'
     dest: '/etc/nginx/sites-enabled/livepeer-config.conf'
     state: link
+    force: true
   notify: reload nginx
