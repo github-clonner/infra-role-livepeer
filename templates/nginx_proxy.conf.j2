@@ -1,0 +1,22 @@
+server {
+    listen 80
+    server_name {{ livepeer_domain }}
+    location / {
+      return 302 https://{{ livepeer_domain }};
+    }
+}
+
+server {
+    listen 443 ssl
+    
+    server_name {{ livepeer_domain }}
+
+    ssl_certificate     {{ livepeer_ssl_crt_path }}
+    ssl_certificate_key {{ livepeer_ssl_key_path }}
+
+    root {{ livepeer_root }}
+    
+    location /stream/ {
+      proxy_pass http://localhost:{{ livepeer_cont_http_port }}/stream/;
+    }
+}

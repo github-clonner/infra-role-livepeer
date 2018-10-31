@@ -1,28 +1,13 @@
 ---
-- name: Configure nginx proxy for Slack Archive
-  include_role:
-    name: nginx
-  vars:
-    nginx_sites:
-      livepeer_http:
-        - listen 80
-    
-        - server_name {{ livepeer_domain }}
-    
-        - location / {
-            return 302 https://{{ livepeer_domain }};
-          }
+- name: Template nginx proxy config
+  template:
+    src: 'nginx_proxy.conf.j2'
+    dest: '/etc/nginx/sites-available/livepeer-proxy.conf'
+  notify: reload nginx
 
-      livepeer_https:
-        - listen 443 ssl
-    
-        - server_name {{ livepeer_domain }}
-
-        - ssl_certificate     {{ livepeer_ssl_crt_path }}
-        - ssl_certificate_key {{ livepeer_ssl_key_path }}
-
-        - root {{ livepeer_root }}
-    
-        - location /stream/ {
-            proxy_pass http://localhost:{{ livepeer_cont_http_port }}/stream/;
-          }
+- name: Symlink nginx proxy config
+  file:
+    src: '/etc/nginx/sites-available/livepeer-config.conf'
+    dest: '/etc/nginx/sites-enabled/livepeer-config.conf'
+    state: link
+  notify: reload nginx
