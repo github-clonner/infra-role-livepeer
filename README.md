@@ -23,7 +23,7 @@ The __HTTP__ port is exposed via __HTTPS__ using Nginx using CloudFlare certific
 
 # Requirements
 
-This role assumes availability of:
+Due to being part of Status infra this role assumes availability of certain things:
 
 * Docker for running containers
 * Nginx full installation
