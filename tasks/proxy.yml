@@ -18,8 +18,8 @@
     
         - server_name {{ livepeer_domain }}
 
-        - ssl_certificate     /certs/origin.crt
-        - ssl_certificate_key /certs/origin.key
+        - ssl_certificate     {{ livepeer_ssl_crt_path }}
+        - ssl_certificate_key {{ livepeer_ssl_key_path }}
 
         - root {{ livepeer_root }}
     
