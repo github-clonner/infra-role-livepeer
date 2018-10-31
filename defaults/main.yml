@@ -12,9 +12,9 @@ livepeer_cont_restart: false
 
 livepeer_root: '/var/www/livepeer'
 livepeer_verbose: false
-# WARNING: Change to your own domain
+# WARNING: Change to your own domain and preferred header
 livepeer_domain: ~
-livepeer_page_header: 'Status.im Livestreams'
+livepeer_page_header: 'My Livestreams'
 
 # optional setup of a Conusl service definition
 livepeer_consul_setup: false
