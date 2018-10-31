@@ -13,7 +13,7 @@
       - '{{ livepeer_cont_http_port }}:{{ livepeer_cont_http_port }}'
       - '{{ livepeer_cont_rtmp_port }}:{{ livepeer_cont_rtmp_port }}'
     command: |
-      {% if livepeer_livepeer_verbose %}
+      {% if livepeer_verbose %}
       -v=6
       {% endif %}
       -rinkeby
