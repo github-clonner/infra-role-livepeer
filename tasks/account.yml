@@ -1,0 +1,46 @@
+---
+- name: Create directories for geth
+  file:
+    path: '{{ livepeer_cont_vol }}/data/keystore'
+    state: directory
+
+- name: Find all enode files
+  find:
+    paths: '{{ livepeer_cont_vol }}/data/keystore'
+    patterns: 'UTC--*'
+    file_type: file
+  register: account_files
+
+- name: Set Geth password to be empty
+  copy:
+    dest: '{{ livepeer_cont_vol }}/data/keystore/password'
+    content: ''
+
+- name: Generate Geth account
+  docker_container:
+    name: '{{ geth_name }}'
+    image: '{{ geth_image }}'
+    pull: true
+    auto_remove: yes
+    command: |
+      account new
+      --keystore=/keys
+      --password=/keys/password
+    volumes:
+      - '{{ livepeer_cont_vol }}/data/keystore:/keys:rw'
+  when: account_files.files | length == 0
+
+- name: Find all enode files
+  find:
+    paths: '{{ livepeer_cont_vol }}/data/keystore'
+    patterns: 'UTC--*'
+    file_type: file
+  register: account_files
+
+- name: Read account address
+  shell: 'cat {{ account_files.files[0].path }} | jq ".address"'
+  register: eth_account_addr
+
+- name: Extract address
+  set_fact:
+    eth_account_addr: '{{ eth_account_addr.stdout | trim }}'

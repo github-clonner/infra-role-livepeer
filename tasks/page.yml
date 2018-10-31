@@ -1,0 +1,58 @@
+---
+- name: Clone livepeerjs repo
+  git:
+    repo: 'https://github.com/livepeer/livepeerjs'
+    version: 'feature/devcon4'
+    depth: 1
+    force: true
+    dest: '/opt/livepeerjs'
+
+- name: Install yarn for deps
+  npm:
+    name: '{{ item }}'
+    global: true
+  with_items:
+    - npx
+    - yarn
+
+- name: Install dependencies for livepeer player
+  yarn:
+    path: '/opt/livepeerjs/packages/player'
+    production: yes
+
+# this is necessary so we know the available streams
+- name: Get livepeer node address
+  uri:
+    url: 'http://localhost:{{ livepeer_cont_cli_port }}/ethAddr'
+    return_content: true
+  register: livepeer_address
+
+- name: Fix site header
+  lineinfile:
+    path: '/opt/livepeerjs/packages/player/src/views/Landing/index.js'
+    state: present
+    regexp: '^(.*)Devcon4.tv(.*)$'
+    line: '\1{{ livepeer_page_header }}\2'
+    backrefs: true
+
+- name: Build the livepeerjs player
+  command: 'yarn build'
+  environment:
+    NODE_ENV: production
+    REACT_APP_DEVCON4_TV_ADDRESS: '{{ livepeer_address.content | trim }}'
+    REACT_APP_DEVCON4_TV_STREAM_ROOT_URL: 'https://{{ livepeer_domain }}/stream'
+  args:
+    chdir: '/opt/livepeerjs/packages/player'
+
+- name: Create livepeer page directory
+  file:
+    path: '{{ livepeer_root }}'
+    state: directory
+    owner: www-data
+    group: www-data
+
+- name: Copy livepeer player files
+  shell: 'cp -r /opt/livepeerjs/packages/player/build/*  {{ livepeer_root }}'
+
+- name: Fix permissions on livepeer player
+  command: 'chown www-data:www-data -R {{ livepeer_root }}'

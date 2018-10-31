@@ -1,0 +1,24 @@
+---
+livepeer_cont_image: 'statusteam/livepeer:ubuntu'
+livepeer_cont_name: 'livepeer'
+livepeer_cont_vol: '/docker/{{ livepeer_cont_name }}'
+livepeer_cont_cli_port: 7935
+livepeer_cont_http_port: 8080
+livepeer_cont_rtmp_port: 1935
+
+livepeer_cont_state: started
+livepeer_cont_recreate: false
+livepeer_cont_restart: false
+
+livepeer_root: '/var/www/livepeer'
+livepeer_verbose: false
+# WARNING: Change to your own domain
+livepeer_domain: ~
+livepeer_page_header: 'Status.im Livestreams'
+
+# optional setup of a Conusl service definition
+livepeer_consul_setup: false
+
+# geth for creating an account
+geth_image: 'ethereum/client-go:alpine'
+geth_name: geth-account-new

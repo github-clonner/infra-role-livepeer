@@ -1,0 +1,29 @@
+---
+- name: Enable LivePeer ports
+  iptables:
+    comment: '{{ item.comment }}'
+    action: insert
+    chain: DOCKER-USER
+    jump: ACCEPT
+    source: '0.0.0.0/0'
+    protocol: 'tcp'
+    destination_port: '{{ item.port }}'
+  with_items:
+    - { 'port': '{{ livepeer_cont_rtmp_port }}', 'comment': 'LivePeer RTMP' }
+    - { 'port': '{{ livepeer_cont_http_port }}', 'comment': 'LivePeer HTTP' }
+  notify:
+    - Save iptables rules
+
+- name: Enable LivePeer HTTP & HTTPS ports
+  iptables:
+    comment: OpenBounty
+    chain: INPUT
+    jump: ACCEPT
+    source: '0.0.0.0/0'
+    protocol: 'tcp'
+    destination_port: '{{ item }}'
+  with_items:
+    - 80
+    - 443
+  notify:
+    - Save iptables rules

@@ -1,0 +1,28 @@
+---
+- name: Configure nginx proxy for Slack Archive
+  include_role:
+    name: nginx
+  vars:
+    nginx_sites:
+      livepeer_http:
+        - listen 80
+    
+        - server_name {{ livepeer_domain }}
+    
+        - location / {
+            return 302 https://{{ livepeer_domain }};
+          }
+
+      livepeer_https:
+        - listen 443 ssl
+    
+        - server_name {{ livepeer_domain }}
+
+        - ssl_certificate     /certs/origin.crt
+        - ssl_certificate_key /certs/origin.key
+
+        - root {{ livepeer_root }}
+    
+        - location /stream/ {
+            proxy_pass http://localhost:{{ livepeer_cont_http_port }}/stream/;
+          }

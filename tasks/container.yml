@@ -1,0 +1,26 @@
+---
+- name: 'Create {{ livepeer_cont_name }} container'
+  docker_container:
+    name: '{{ livepeer_cont_name }}'
+    image: '{{ livepeer_cont_image }}'
+    pull: true
+    restart_policy: always
+    state: '{{ livepeer_cont_state }}'
+    recreate: '{{ livepeer_cont_recreate }}'
+    restart: '{{ livepeer_cont_restart }}'
+    ports:
+      - '127.0.0.1:{{ livepeer_cont_cli_port }}:{{ livepeer_cont_cli_port }}'
+      - '{{ livepeer_cont_http_port }}:{{ livepeer_cont_http_port }}'
+      - '{{ livepeer_cont_rtmp_port }}:{{ livepeer_cont_rtmp_port }}'
+    command: |
+      {% if livepeer_livepeer_verbose %}
+      -v=6
+      {% endif %}
+      -rinkeby
+      -cliAddr=0.0.0.0:{{ livepeer_cont_cli_port }}
+      -httpAddr=0.0.0.0:{{ livepeer_cont_http_port }}
+      -rtmpAddr=0.0.0.0:{{ livepeer_cont_rtmp_port }}
+      -ethAcctAddr={{ eth_account_addr }}
+      -ethPassword=""
+    volumes:
+      - '{{ cont_vol }}/data:/root/.lpData'

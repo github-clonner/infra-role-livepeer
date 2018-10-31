@@ -1,0 +1,16 @@
+---
+- name: Create Consul service definition
+  include_role: name=consul-service
+  vars:
+    consul_config_name: '{{ livepeer_cont_name }}'
+    consul_services:
+      - name: '{{ livepeer_cont_name }}'
+        tags: ['livepeer', 'misc']
+        # we advertise the port with basic auth
+        port: '{{ livepeer_cont_http_port }}'
+        checks:
+          - id: livepeer-status
+            name: LivePeer Healthcheck
+            type: http
+            http: 'http://localhost:{{ livepeer_cont_http_port }}/ethAddr'
+  when: livepeer_consul_setup
