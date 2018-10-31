@@ -4,8 +4,9 @@
     repo: 'https://github.com/livepeer/livepeerjs'
     version: 'feature/devcon4'
     depth: 1
-    force: true
+    update: '{{ livepeer_page_update }}'
     dest: '/opt/livepeerjs'
+  register: repo
 
 - name: Install yarn for deps
   npm:
@@ -19,6 +20,7 @@
   yarn:
     path: '/opt/livepeerjs/packages/player'
     production: yes
+  when: repo.changed
 
 # this is necessary so we know the available streams
 - name: Get livepeer node address
@@ -34,6 +36,7 @@
     regexp: '^(.*)Devcon4.tv(.*)$'
     line: '\1{{ livepeer_page_header }}\2'
     backrefs: true
+  when: repo.changed
 
 - name: Build the livepeerjs player
   command: 'yarn build'
@@ -43,6 +46,9 @@
     REACT_APP_DEVCON4_TV_STREAM_ROOT_URL: 'https://{{ livepeer_domain }}/stream'
   args:
     chdir: '/opt/livepeerjs/packages/player'
+    creates: '/opt/livepeerjs/packages/player/build/index.html'
+  when: repo.changed
+  register: build
 
 - name: Create livepeer page directory
   file:
@@ -53,6 +59,11 @@
 
 - name: Copy livepeer player files
   shell: 'cp -r /opt/livepeerjs/packages/player/build/*  {{ livepeer_root }}'
+  when: build.changed
 
 - name: Fix permissions on livepeer player
-  command: 'chown www-data:www-data -R {{ livepeer_root }}'
+  file:
+    dest: '{{ livepeer_root }}'
+    owner: 'www-data'
+    group: 'www-data'
+    recurse: true

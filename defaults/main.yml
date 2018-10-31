@@ -19,6 +19,7 @@ livepeer_verbose: false
 # WARNING: Change to your own domain and preferred header
 livepeer_domain: ~
 livepeer_page_header: 'My Livestreams'
+livepeer_page_update: false
 
 # optional setup of a Conusl service definition
 livepeer_consul_setup: false
