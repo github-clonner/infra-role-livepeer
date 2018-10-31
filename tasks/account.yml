@@ -38,9 +38,10 @@
   register: account_files
 
 - name: Read account address
-  shell: 'cat {{ account_files.files[0].path }} | jq ".address"'
+  slurp:
+    path: '{{ account_files.files[0].path }}'
   register: eth_account_addr
 
 - name: Extract address
   set_fact:
-    eth_account_addr: '{{ eth_account_addr.stdout | trim }}'
+    eth_account_addr: '{{ eth_account_addr.content | json_query("address") }}'
