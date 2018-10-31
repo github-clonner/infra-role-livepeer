@@ -44,4 +44,4 @@
 
 - name: Extract address
   set_fact:
-    eth_account_addr: '{{ eth_account_addr.content | json_query("address") }}'
+    eth_account_addr: '{{ (eth_account_addr.content | b64decode | from_json)["address"] }}'
