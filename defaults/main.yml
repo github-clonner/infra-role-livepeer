@@ -10,7 +10,7 @@ livepeer_cont_rtmp_port: 1935
 livepeer_ssl_crt_path: '/certs/origin.crt'
 livepeer_ssl_key_path: '/certs/origin.key'
 
-livepeer_cont_state: started
+livepeer_cont_state: 'started'
 livepeer_cont_recreate: false
 livepeer_cont_restart: false
 
@@ -25,4 +25,4 @@ livepeer_consul_setup: false
 
 # geth for creating an account
 geth_image: 'ethereum/client-go:alpine'
-geth_name: geth-account-new
+geth_name: 'geth-account-new'

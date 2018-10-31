@@ -20,3 +20,11 @@ In general the workflow is as follows:
 4. The LivePeer node broadcasts the stream via the __HTTP__ port.
 
 The __HTTP__ port is exposed via __HTTPS__ using Nginx using CloudFlare certificates.
+
+# Requirements
+
+This role assumes availability of:
+
+* Docker for running containers
+* Nginx full installation
+* The `iptables-persistent` module
