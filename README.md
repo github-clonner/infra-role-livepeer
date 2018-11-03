@@ -30,6 +30,14 @@ This role deploys two services:
 
 The proxy that exposes the JS player defaults to ports `80` and `443` in Nginx, you can see that in [`templates/nginx_proxy.conf.j2`](templates/nginx_proxy.conf.j2).
 
+# Installation
+
+Add to your `requirements.yml` file:
+```yaml
+- name: livepeer
+  src: https://github.com/status-im/infra-role-livepeer.git
+```
+
 # Requirements
 
 Due to being part of Status infra this role assumes availability of certain things:
