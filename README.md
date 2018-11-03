@@ -21,6 +21,15 @@ In general the workflow is as follows:
 
 The __HTTP__ port is exposed via __HTTPS__ using Nginx using CloudFlare certificates.
 
+# Services
+
+This role deploys two services:
+
+* [__LivePeer__ node](https://github.com/livepeer/go-livepeer) described above.
+* [__LivePeer__ JS player](https://github.com/livepeer/livepeerjs/tree/master/packages/player) and website.
+
+The proxy that exposes the JS player defaults to ports `80` and `443` in Nginx, you can see that in [`templates/nginx_proxy.conf.j2`](templates/nginx_proxy.conf.j2).
+
 # Requirements
 
 Due to being part of Status infra this role assumes availability of certain things:
