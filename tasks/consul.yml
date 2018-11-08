@@ -12,5 +12,5 @@
           - id: livepeer-status
             name: LivePeer Healthcheck
             type: http
-            http: 'http://localhost:{{ livepeer_cont_http_port }}/ethAddr'
+            http: 'http://localhost:{{ livepeer_cont_cli_port }}/ethAddr'
   when: livepeer_consul_setup
